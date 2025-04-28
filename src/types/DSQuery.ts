@@ -22,6 +22,9 @@ export enum Sort {
   NONE = "none",
 }
 
+/** Возможные типы полей */
+export type Type = "string" | "number" | "boolean" | "date" | "ref" | "composite";
+
 export interface DSQueryField {
   /** Системное имя поля */
   name: string;
@@ -38,6 +41,9 @@ export interface DSQueryField {
   expression: string;
 
   sort: Sort;
+
+  /** Тип поля */
+  type?: Type
 }
 
 /** Описывает одно объединение */

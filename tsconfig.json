@@ -10,7 +10,8 @@
     "moduleResolution": "node",                            
     "forceConsistentCasingInFileNames": true,           
     "strict": true,
-    "jsx": "react"                                       
+    "jsx": "react"
+    //"declaration": true                                       
   },
   "include": ["src"]
 }

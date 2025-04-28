@@ -18,18 +18,41 @@ const config = {
             resolve: {
                 fullySpecified: false
             }
+        },
+        {
+            test: /\.svg$/,
+            include: path.resolve('./src/assets/icons'),
+            loader: 'svg-sprite-loader',
+            options: {
+                symbolId: 'icon-[name]'
+            }
         }
        ]
     },
     resolve: {
       extensions: ['.tsx', '.ts', '.js'],
     },
+    experiments: {
+        outputModule: true,  // Включаем экспериментальную фичу для модульного вывода
+    },
     output: {
         filename: 'app.js',
-        path: path.resolve('./public')
+        path: path.resolve('./public'),
+        module: true,
+        library: {
+            type: 'module',
+        }
+        // filename: '[name].js',
+        // chunkFilename: '[name].[contenthash].js',
+        // path: path.resolve('./public')
     },
+    mode: 'production',
     optimization: {
-        usedExports: false
+        usedExports: true,
+        minimize: true
+        // splitChunks: {
+        //     chunks: 'all'
+        // }
     }
 }
 

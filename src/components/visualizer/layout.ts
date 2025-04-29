@@ -20,12 +20,6 @@ export class VisualizerLayout {
         this.layout.invert = false;
         this.layout.edgeRouting = false;
         this.layout.moveTree = true;
-        // this.layout = new HierarchicalLayout(this.graph);
-        // this.layout.intraCellSpacing = 30;
-        // this.layout.interRankCellSpacing = 20;
-        // this.layout.fineTuning = true;
-        // this.layout.disableEdgeStyle = false;
-        //this.layoutGraph()
     }
 
     /**
@@ -35,41 +29,6 @@ export class VisualizerLayout {
         this.graph.getDataModel().beginUpdate();
 
         this.graph.setCellsMovable(true);
-        //this.graph.view.setTranslate(0, 0);
-        //this.graph.container.scrollLeft = 0;
-        //this.graph.container.scrollTop = 0;
-        // const roots = this.graph.getChildVertices(this.graph.getDefaultParent()).filter(cell => {
-        //     return this.graph.getOutgoingEdges(cell, null).length === 0;
-        // });
-        // const parent = this.graph.getDefaultParent();
-        // const virtualRoot = this.graph.insertVertex({
-        //     parent,
-        //     position: [50, 50],
-        //     size: [10, 25],
-        //     value: "NULL",
-        //     style: {
-        //         //shape: cellInfo.type.cellShape
-        //         shape: "rectangle",
-        //         rounded: true,
-        //         fillColor: "orange",
-        //         strokeColor: "gold"
-        //     }
-        // });
-        // console.info("roots", roots);
-        // for (const root of roots) {
-            // this.graph.insertEdge({
-            //     parent,
-            //     source: virtualRoot,
-            //     target: root,
-            //     style: {
-            //         edgeStyle: 'orthogonalEdgeStyle',
-            //         rounded: true,
-            //         verticalAlign: 'top',
-            //         verticalLabelPosition: 'top'
-            //     }
-            // });
-        //     this.layout.execute(this.graph.getDefaultParent(), root);
-        // }
         const newEdgeStyle = this.getArrowStyle(this.layout.horizontal);
         this.setArrowStyle(newEdgeStyle);
         this.layout.execute(this.graph.getDefaultParent());

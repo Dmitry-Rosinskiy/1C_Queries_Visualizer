@@ -1,14 +1,6 @@
-//import query from './model';
 import { EditorHandler } from './components/visualizer/handlers';
 import { VisualizerGraph } from './components/visualizer/graph';
 import { FlatDSQueryContainer } from './types/FlatDSQuery';
-
-// declare global {
-//   interface Window {
-//       //appModelVisualizer: (containerId: string, query: FlatDSQueryContainer, editorHandler: EditorHandler) => void;
-//       AppModelVisualizer: any;
-//   }
-// }
 
 /** Приложение визуализатора */
 export class AppModelVisualizer {
@@ -41,16 +33,3 @@ export class AppModelVisualizer {
 }
 
 export default AppModelVisualizer;
-
-// export const appModelVisualizer = (containerId: string, query: FlatDSQueryContainer, editorHandler: EditorHandler): void => {
-//     const container = <HTMLElement>document.getElementById(containerId);
-//     if (!container) {
-//         console.error('Приложение не может работать, т.к. не был найден контейнер с id ' + containerId);
-//     } else {
-//         const schemeGraph: SchemeGraph = new SchemeGraph(container, editorHandler);
-//         schemeGraph.drawGraph(query);
-//     }
-// }
-
-//window.appModelVisualizer = appModelVisualizer;
-//window.AppModelVisualizer = AppModelVisualizer;

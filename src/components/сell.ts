@@ -13,12 +13,12 @@ export enum CellType {
 
 /** Функции агрегации (группировки) */
 export enum AggregateFunctions {
-    sum = 'SUM',
-    min = 'MIN',
-    max = 'MAX',
-    avg = 'AVG',
-    count = 'COUNT',
-    rcount = 'RCOUNT'
+    SUM = 'SUM',
+    MIN = 'MIN',
+    MAX = 'MAX',
+    AVG = 'AVG',
+    COUNT = 'COUNT',
+    RCOUNT = 'RCOUNT'
 }
 
 /** Ячейки, которые можно выбрать в визуализаторе */

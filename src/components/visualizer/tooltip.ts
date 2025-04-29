@@ -18,10 +18,8 @@ export class VisualizerTooltip {
         this.container = container;
         this.graph = graph
         this.tooltip = document.createElement('div');
-        //this.tooltip.classList.add("scheme-tooltip");
         this.setStyle();
         this.container.appendChild(this.tooltip);
-        //console.log(this.tooltip);
     }
 
     /**
@@ -29,12 +27,6 @@ export class VisualizerTooltip {
      */
     private setStyle(): void {
         Object.assign(this.tooltip.style, {
-            // position: "absolute",
-            // backgroundColor: "#ffd700ee",
-            // border: "1px solid black",
-            // padding: "5px",
-            // fontSize: "0.5em",
-            // borderRadius: "5px",
             position: 'absolute',
             backgroundColor: '#ffd700ee',
             color: '#555',

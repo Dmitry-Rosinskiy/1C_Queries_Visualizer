@@ -213,10 +213,6 @@ export class VisualizerCellManager {
         if (visualizerCell !== undefined && visualizerCell.info.type.selectedStyle !== undefined) {
             this.updateCellStyle(cell, visualizerCell.info.type.selectedStyle);
         }
-        //const newStyle = Object.assign({}, this.graph.getCellStyle(cell));
-        //newStyle.strokeColor = 'green';
-        //newStyle.strokeWidth = 3;
-        //this.graph.getDataModel().setStyle(cell, newStyle);
         this.visualizerGraph.setSelectedCell(cell);
     }
 
@@ -229,11 +225,6 @@ export class VisualizerCellManager {
         if (visualizerCell !== undefined) {
             this.updateCellStyle(cell, visualizerCell.info.type.defaultStyle);
         }
-        //const newStyle = { ...this.graph.getCellStyle(cell) };
-        
-        //newStyle.strokeColor = 'gold';
-        //newStyle.strokeWidth = 1;
-        //this.graph.getDataModel().setStyle(cell, newStyle);
         this.visualizerGraph.setSelectedCell(undefined);
     }
 
@@ -291,9 +282,6 @@ export class VisualizerCellManager {
             if (visualizerCell !== undefined && visualizerCell.info.type.highlightedStyle !== undefined) {
                 this.updateCellStyle(cell, visualizerCell.info.type.highlightedStyle);
             }
-            //const newStyle = Object.assign({}, this.graph.getCellStyle(cell));
-            //newStyle.fillColor = 'purple';
-            //this.graph.getDataModel().setStyle(cell, newStyle);
         }
         this.visualizerGraph.setHighlightedCells(cells);
     }
@@ -307,9 +295,6 @@ export class VisualizerCellManager {
             if (visualizerCell !== undefined) {
                 this.updateCellStyle(cell, visualizerCell.info.type.defaultStyle);
             }
-            //const newStyle = Object.assign({}, this.graph.getCellStyle(cell));
-            //newStyle.fillColor = 'orange';
-            //this.graph.getDataModel().setStyle(cell, newStyle);
         }
         this.visualizerGraph.setHighlightedCells([]);
     }
@@ -352,17 +337,6 @@ export class VisualizerCellManager {
         this.updateCellStyle(cell, cellInfo.type.defaultStyle);
         const geo = graph.updateCellSize(cell);
         graph.scrollCellToVisible(cell);
-        //this.graph.resizeCell(cell, null);
-        // cell.setStyle('html=1;');
-        // cell.setValue(divElement);
-
-        // this.graph.getLabel = function (vertex) {
-        //     if (vertex === cell) {
-        //         return divElement;
-        //     } else {
-        //         return vertex.value;
-        //     };
-        // }
 
         const newCell: VisualizerCell = {cell: cell, info: cellInfo};
         this.addVisualizerCell(newCell);
@@ -389,7 +363,6 @@ export class VisualizerCellManager {
             return;
         }
         this.addArrow(selectCell.cell, selectTable.cell);
-        //this.addEdge(selectTable.cell, selectCell.cell);
     }
 
     /**

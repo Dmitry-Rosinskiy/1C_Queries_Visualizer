@@ -1,4 +1,4 @@
-import { Graph, InternalEvent, Cell, Point, PrintPreview} from '@maxgraph/core';
+import { Graph, InternalEvent, Cell, Point } from '@maxgraph/core';
 import { FlatDSQueryContainer } from '../../types/FlatDSQuery';
 import { VisualizerCell, SELECTABLE_CELL_TYPES } from '../сell'
 import { VisualizerTooltip as VisualizerTooltip } from './tooltip';
@@ -72,7 +72,6 @@ export class VisualizerGraph {
         this.graph.setCellsResizable(false);
         this.graph.setCellsSelectable(false);
         this.graph.setPanning(false);
-        //this.graph.setEnabled(false);
         this.graph.setHtmlLabels(true);
         this.graph.isCellEditable = () => false;
 
@@ -100,7 +99,6 @@ export class VisualizerGraph {
                         .addTileGap(tileGapSize)
                         .addShowExtra()
                         .addTileGap(tileGapSize)
-                        //.addSaveGraphAsImage()
                         .getToolbar();
 
         this.container.prepend(toolbar);
@@ -209,7 +207,6 @@ export class VisualizerGraph {
                 this.cellManager.centerCell(cell);
                 this.cellManager.selectCell(cell);
                 const highlightCells = this.queryManager.getSelectSources(cell);
-                //console.info('highlightCells', highlightCells);
                 this.cellManager.highlightCells(highlightCells);
             } else {
                 this.cellManager.unselectCell(cell);
@@ -228,7 +225,6 @@ export class VisualizerGraph {
     doubleClickCell(cell: Cell): void {
         const visualizerCell = this.cellManager.getVisualizerCellByCell(cell);
         if (visualizerCell !== undefined && this.editorHandler !== undefined) {
-            //console.info('query update');
             const newQuery = this.editorHandler(`${visualizerCell.info.name} (${visualizerCell.info.id})`);
             if (newQuery !== undefined) {
                 this.drawGraph(newQuery);
@@ -307,7 +303,6 @@ export class VisualizerGraph {
             return;
         }
         const bounds = this.graph.getGraphBounds();
-        //console.info('bounds', bounds);
         const view = this.graph.getView();
         const scale = view.getScale();
 
@@ -378,112 +373,4 @@ export class VisualizerGraph {
     setHighlightedCells(highlightedCells: Cell[]): void {
         this.highlightedCells = highlightedCells;
     }
-
-    // saveGraphAsPng() {
-    //     const svgElement = this.container.querySelector(':scope > svg') as SVGSVGElement;
-    //     if (!svgElement) {
-    //         console.warn("Граф не был найден");
-    //         return;
-    //     }
-
-    //     const rect = svgElement.getBoundingClientRect();
-
-    //     const clonedSvg = svgElement.cloneNode(true) as SVGSVGElement;
-    //     clonedSvg.setAttribute('width', rect.width.toString());
-    //     clonedSvg.setAttribute('height', rect.height.toString());
-
-    //     this.inlineUses(clonedSvg);
-    //     clonedSvg.querySelectorAll('foreignObject').forEach(el => el.remove());
-    //     console.info(clonedSvg);
-
-    //     //svgElement.style.outline = '3px solid red';
-    //     const serializer = new XMLSerializer();
-    //     const svgString = serializer.serializeToString(clonedSvg);
-
-    //     const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
-    //     const url = URL.createObjectURL(svgBlob);
-
-    //     const img = new Image();
-    //     img.crossOrigin = "anonymous";
-    //     img.onload = () => {
-    //         const canvas = document.createElement('canvas');
-
-    //         //const baseVal = clonedSvg.viewBox.baseVal;
-    //         //let width = baseVal.width;
-    //         //let height = baseVal.height;
-    //         let width = svgElement.width.baseVal.value;
-    //         let height = svgElement.height.baseVal.value;
-
-    //         // if (!width || !height) {
-    //         //     const bbox = clonedSvg.getBoundingClientRect();
-    //         //     console.info('bbox', clonedSvg.getBoundingClientRect());
-    //         //     width = bbox.width;
-    //         //     height = bbox.height;
-    //         // }
-
-    //         canvas.width = width;
-    //         canvas.height = height;
-    //         console.log(canvas.width, canvas.height);
-
-    //         // canvas.width = clonedSvg.viewBox.baseVal.width || clonedSvg.width.baseVal.value;
-    //         // canvas.height = clonedSvg.viewBox.baseVal.height || clonedSvg.height.baseVal.value;
-
-    //         const ctx = canvas.getContext('2d');
-    //         if (ctx !== null) {
-    //             ctx.drawImage(img, 0, 0);
-    //             canvas.toBlob(blob => {
-    //                 if (blob !== null) {
-    //                     //const url = URL.createObjectURL(blob);
-    //                     const link = document.createElement('a');
-    //                     link.href = URL.createObjectURL(blob);
-    //                     link.download = 'graph.png';
-    //                     link.click();
-    //                     URL.revokeObjectURL(link.href);
-    //                     console.log(url);
-    //                 } else {
-    //                     console.warn('blob is null');
-    //                 }
-    //             }, 'image/png');
-    //         }
-    //         //URL.revokeObjectURL(url);
-    //     };
-    //     img.onerror = (err) => {
-    //         console.error('Ошибка загрузки изображения', err);
-    //     };
-    //     //img.setAttribute('crossorigin', 'anonymous');
-    //     img.src = url;
-    //     console.log('img', img);
-    // }
-
-    // private inlineUses(svgElement: SVGSVGElement) {
-    //     const uses = svgElement.querySelectorAll('use');
-
-    //     uses.forEach(use => {
-    //         const href = use.getAttribute('href');
-    //         if (href === null || !href.startsWith('#')) {
-    //             return;
-    //         }
-    //         const id = href.slice(1);
-    //         const symbol = document.getElementById(id);
-    //         if (symbol === null) {
-    //             console.warn(`Symbol with id ${id} not found`);
-    //             return;
-    //         }
-
-    //         const clonedNodes = Array.from(symbol.cloneNode(true).childNodes);
-    //         const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-
-    //         clonedNodes.forEach(node => g.appendChild(node));
-
-    //         use.parentNode?.replaceChild(g, use);
-    //     });
-    // }
-
-    // saveGraphAsPng() {
-    //     const printPreview = new PrintPreview(this.graph);
-    //     printPreview.scale = 1;
-    //     printPreview.border = 10;
-
-    //     printPreview.print();
-    // }
 }

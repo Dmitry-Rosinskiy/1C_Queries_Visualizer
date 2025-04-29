@@ -72,9 +72,6 @@ export class VisualizerQueryManager {
     private processSelectQuery(query: FlatDSQuerySelect, queryId: string, name: string | undefined = undefined): string {
         let tableId = query.from;
         tableId = this.processSubquery(this.queries[tableId], tableId, query.fromAs);
-        // if (this.queries[tableId].type === DSQueryType.system) {
-        //     tableId = this.processSystemTable(tableId, query.fromAs);
-        // }
         if (query.groupBy !== undefined) {
             const groupById = queryId + '-g';
             const groupFields: string[] = [];
@@ -107,8 +104,6 @@ export class VisualizerQueryManager {
         this.cellManager.makeSelect(tableId, queryId);
 
         return queryId;
-
-        // this.layout.layoutGraph();
     }
 
     /**
@@ -128,14 +123,8 @@ export class VisualizerQueryManager {
             if (!this.cellManager.cellExists(joinId)) {
                 this.cellManager.createJoinCell(joinId, relation.type, relation.condition);
             }
-            //let joinTable2Id = relation.source.from;
-            // if (this.queries[joinTable1Id].type === DSQueryType.system) {
-            //     joinTable2Id = this.processSystemTable(joinTable2Id, relation.source.fromAs);
-            // }
             this.cellManager.makeJoin(joinTable1Id, joinTable2Id, joinId);
             joinTable1Id = joinId;
-
-            //this.layout.layoutGraph();
         }
 
         let lastTableId = query.joinSources.root.relations.slice(-1)[0];
@@ -172,8 +161,6 @@ export class VisualizerQueryManager {
         this.cellManager.makeSelect(lastTableId, queryId);
         
         return queryId;
-
-        // this.layout.layoutGraph();
     }
 
     /**
@@ -188,9 +175,6 @@ export class VisualizerQueryManager {
         for (const union of query.unions) {
             let tableId = union.from;
             tableId = this.processSubquery(this.queries[tableId], tableId, union.fromAs);
-            // if (this.queries[tableId].type === DSQueryType.system) {
-            //     tableId = this.processSystemTable(tableId, union.fromAs);
-            // }
             tableIds.push(union.from);
         }
         const unionId = queryId + '-u';
@@ -198,7 +182,6 @@ export class VisualizerQueryManager {
             this.cellManager.createUnionCell(unionId);
         }
         this.cellManager.makeUnion(tableIds, unionId);
-        //this.layout.layoutGraph();
 
         if (!this.cellManager.cellExists(queryId)) {
             const selectFields: string[] = [];
@@ -206,17 +189,12 @@ export class VisualizerQueryManager {
                 const correspondingFields: string[] = [];
                 for (let j = 0; j < query.unions.length; j++) {
                     if (query.select[i].expressionUnion[j] !== null) {
-                        //console.log(`query.unions[${j}] = ${query.unions[j]}`);
                         correspondingFields.push(query.unions[j].fromAs + '.' + query.select[i].expressionUnion[j]!);
                     } else {
                         correspondingFields.push('null');
                     }
                 }
-                //if (query.select[i].type !== undefined) {
-                    //selectFields.push(`${correspondingFields.join(' | ')}: ${query.select[i].type}`);
-                //} else {
-                    selectFields.push(this.makeHintForExpression(correspondingFields.join(' | '), query.select[i].type));
-                //}
+                selectFields.push(this.makeHintForExpression(correspondingFields.join(' | '), query.select[i].type));
                 
             }
             this.cellManager.createSelectCell(queryId, selectFields.join('\n'), name);
@@ -224,7 +202,6 @@ export class VisualizerQueryManager {
         }
 
         return queryId;
-        // this.layout.layoutGraph();
     }
 
     /**
@@ -283,7 +260,6 @@ export class VisualizerQueryManager {
      * @returns текст подсказки
      */
     private makeHintForExpression(expression: string, type: Type | undefined = undefined) {
-        //const aggregateFuncs = ['SUM', 'MIN', 'MAX'];
         for (const func in AggregateFunctions) {
             const regexp = new RegExp(`${func}`, 'g');
             expression = expression.replace(regexp, `<font color="orangered">${func}</font>`);
@@ -309,8 +285,6 @@ export class VisualizerQueryManager {
      */
     private getSelectSourcesRecursively(currentCell: Cell, foundCells: Cell[]): void {
         const childCells = this.cellManager.getOutgoingCells(currentCell);
-        //console.info('currentCell', currentCell);
-        //console.info('childCells', childCells);
         if (childCells.length === 0) {
             return;
         } else {

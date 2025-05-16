@@ -8,7 +8,7 @@ export type EditorHandler = ((tableId: string) => FlatDSQueryContainer);
 /** Обработчик мыши для всплывающей подсказки визуализатора */
 export class TooltipMouseHandler {
     /** Граф визуализатора */
-    private visualizerGraph: VisualizerGraph
+    private visualizerGraph: VisualizerGraph;
 
     /**
      * Конструктор обработчика.

@@ -7,22 +7,31 @@ export enum CellType {
     select = 'select',
     join = 'join',
     union = 'union',
-    group_by = 'group_by',
-    where = 'where'
+    where = 'where',
+    group_by = 'group_by'
 }
 
 /** Функции агрегации (группировки) */
 export enum AggregateFunctions {
-    SUM = 'SUM',
-    MIN = 'MIN',
-    MAX = 'MAX',
-    AVG = 'AVG',
-    COUNT = 'COUNT',
-    RCOUNT = 'RCOUNT'
+    SUM = 'СУММА',
+    MIN = 'МИН',
+    MAX = 'МАКС',
+    AVG = 'СРЕДНЕЕ',
+    COUNT = 'КОЛ',
+    RCOUNT = 'РКОЛ'
+}
+
+/** Операторы отношений, выводящиеся с новой строки */
+export enum LineConditionOperators {
+    AND = 'И',
+    OR = 'ИЛИ'
 }
 
 /** Ячейки, которые можно выбрать в визуализаторе */
 export const SELECTABLE_CELL_TYPES: readonly CellType[] = [CellType.join, CellType.union] as const;
+
+/** Ячейки, которые можно редактировать в визуализаторе */
+export const EDITABLE_CELL_TYPES: readonly CellType[] = [CellType.join, CellType.union] as const;
 
 /** Стиль ячеек, которые используются в визуализаторе */
 export type SchemeCellStyle = Pick<CellStyle, 'shape' | 'fontColor' | 'fillColor' | 'strokeColor' | 'strokeWidth' | 'rounded' | 'arcSize'>

@@ -249,6 +249,14 @@ export class VisualizerCellManager {
         const targetCenterY = (container.clientHeight / 2) / scale;
         const targetTranslate = new Point(targetCenterX - cellCenterX, targetCenterY - cellCenterY);
 
+        if (translate.x === targetTranslate.x && translate.y === targetTranslate.y) {
+            return;
+        }
+        
+        const tooltip = this.visualizerGraph.getTooltip();
+        if (tooltip.isVisible()) {
+            tooltip.hideTooltip();
+        }
         this.visualizerGraph.getGraphAnimation().translateGraph(targetTranslate);
     }
 
@@ -304,7 +312,7 @@ export class VisualizerCellManager {
      * @param cellInfo информация о ячейке
      * @returns ячейка визуализатора
      */
-    private createCell = (cellInfo: VisualizerCellInfo): VisualizerCell => {
+    private createCell(cellInfo: VisualizerCellInfo): VisualizerCell {
         const graph = this.visualizerGraph.getGraph();
         const parent = graph.getDefaultParent();
         
@@ -356,7 +364,7 @@ export class VisualizerCellManager {
      * @param tableId идентификатор таблицы
      * @param selectId идентификатор выборки
      */
-    makeSelect (tableId: string, selectId: string): void {
+    makeSelect(tableId: string, selectId: string): void {
         const selectTable = this.getVisualizerCellById(tableId);
         const selectCell = this.getVisualizerCellById(selectId);
         if (selectTable === undefined || selectCell === undefined) {
@@ -370,7 +378,7 @@ export class VisualizerCellManager {
      * @param tableId идентификатор таблицы
      * @param whereId идентификатор фильтрации
      */
-    makeWhere = (tableId: string, whereId: string): void => {
+    makeWhere(tableId: string, whereId: string): void {
         const selectTable = this.getVisualizerCellById(tableId);
         const whereCell = this.getVisualizerCellById(whereId);
         if (selectTable === undefined || whereCell === undefined) {

@@ -1,10 +1,10 @@
 import { Graph, InternalEvent, Cell, Point } from '@maxgraph/core';
 import { FlatDSQueryContainer } from '../../types/FlatDSQuery';
-import { VisualizerCell, SELECTABLE_CELL_TYPES } from '../сell'
+import { VisualizerCell, SELECTABLE_CELL_TYPES, EDITABLE_CELL_TYPES } from '../сell'
 import { VisualizerTooltip as VisualizerTooltip } from './tooltip';
 import { VisualizerLayout as VisualizerLayout } from './layout';
 import { VisualizerToolbarBuilder } from './toolbar';
-import { EditorHandler, VisualizerGraphHandlers as VisualizerGraphHandlers, TooltipMouseHandler } from './handlers';
+import { EditorHandler, VisualizerGraphHandlers, TooltipMouseHandler } from './handlers';
 import { GraphAnimation } from '../../utils/graph-animation';
 import { EasingFunctions } from '../../utils/easing-functions';
 import { VisualizerCellManager as VisualizerCellManager } from '../../managers/сell-manager';
@@ -113,11 +113,17 @@ export class VisualizerGraph {
      * Визуализирует граф.
      * @param model модель запроса
      */
-    drawGraph = (model: FlatDSQueryContainer): void => {
+    drawGraph(model: FlatDSQueryContainer): void {
         this.graph.getDataModel().clear();
         this.visualizerCells = [];
         this.graph.batchUpdate(() => {
-            this.queryManager.makeScheme(model);
+            try {
+                this.queryManager.makeScheme(model);
+            } catch (error) {
+                console.error("Произошла ошибка при попытке визуализировать модель запроса: передан некорректный объект");
+                return;
+            }
+            
             this.layoutGraph();
             this.graph.cellsOrdered(this.graph.getChildVertices(this.graph.getDefaultParent()), false);
         });
@@ -224,7 +230,10 @@ export class VisualizerGraph {
      */
     doubleClickCell(cell: Cell): void {
         const visualizerCell = this.cellManager.getVisualizerCellByCell(cell);
-        if (visualizerCell !== undefined && this.editorHandler !== undefined) {
+        if (visualizerCell === undefined || this.editorHandler === undefined) {
+            return;
+        }
+        if (EDITABLE_CELL_TYPES.includes(visualizerCell.info.type.name)) {
             const newQuery = this.editorHandler(`${visualizerCell.info.name} (${visualizerCell.info.id})`);
             if (newQuery !== undefined) {
                 this.drawGraph(newQuery);
@@ -251,7 +260,9 @@ export class VisualizerGraph {
                     this.tooltip.showTooltipText(cell, visualizerCell.info.hint); 
                 }
             }
-            if (SELECTABLE_CELL_TYPES.includes(visualizerCell.info.type.name) || visualizerCell.info.extra !== undefined) {
+            if (SELECTABLE_CELL_TYPES.includes(visualizerCell.info.type.name)
+                || EDITABLE_CELL_TYPES.includes(visualizerCell.info.type.name)
+                || visualizerCell.info.extra !== undefined) {
                 this.container.style.cursor = 'pointer';
             } else {
                 this.container.style.cursor = 'default';

@@ -1,8 +1,9 @@
 import { Cell } from "@maxgraph/core";
-import { DSQueryConstant, DSQueryField, DSQueryType, Type } from "../types/DSQuery";
-import { FlatDSQuery, FlatDSQueryContainer, FlatDSQueryJoin, FlatDSQuerySelect, FlatDSQueryUnion, KeyValue } from "../types/FlatDSQuery";
+import { DSQueryConstant, DSQueryType } from "../types/DSQuery";
+import { FlatDSQuery, FlatDSQueryContainer, FlatDSQueryJoin, FlatDSQuerySelect, FlatDSQueryUnion, FlatJoinSources, KeyValue } from "../types/FlatDSQuery";
 import { VisualizerCellManager } from "./сell-manager";
-import { AggregateFunctions, CellType } from "../components/сell";
+import { CellType, LineConditionOperators } from "../components/сell";
+import { GraphTooltipFormatter } from "../utils/graph-tooltip-formatter";
 
 /** Менеджер запросов визуализатора */
 export class VisualizerQueryManager {
@@ -49,15 +50,16 @@ export class VisualizerQueryManager {
      * Обработка запроса "константа".
      * @param query запрос
      * @param queryId идентификатор запроса
+     * @param name название запроса (если нет, то `undefined`)
      * @returns идентификатор запроса
      */
-    private processConstantQuery (query: DSQueryConstant, queryId: string): string {
+    private processConstantQuery (query: DSQueryConstant, queryId: string, name: string | undefined = undefined): string {
         if (!this.cellManager.cellExists(queryId)) {
             const selectFields = [];
             for (const selectField of query.select) {
-                selectFields.push(this.makeHintForField(selectField));
+                selectFields.push(GraphTooltipFormatter.makeHintForField(selectField));
             }
-            this.cellManager.createSelectCell(queryId, selectFields.join('\n'), undefined);
+            this.cellManager.createSelectCell(queryId, selectFields.join('\n'), name);
         }
         return queryId;
     }
@@ -76,7 +78,7 @@ export class VisualizerQueryManager {
             const groupById = queryId + '-g';
             const groupFields: string[] = [];
             for (const groupNumber of query.groupBy) {
-                groupFields.push(this.makeHintForField(query.select[groupNumber]));
+                groupFields.push(GraphTooltipFormatter.makeHintForField(query.select[groupNumber]));
             }
             this.cellManager.createGroupByCell(groupById, groupFields.join('\n'));
             this.cellManager.makeGroupBy(tableId, groupById);
@@ -97,13 +99,33 @@ export class VisualizerQueryManager {
         if (!this.cellManager.cellExists(queryId)) {
             const selectFields = [];
             for (const selectField of query.select) {
-                selectFields.push(this.makeHintForField(selectField));
+                selectFields.push(GraphTooltipFormatter.makeHintForField(selectField));
             }
             this.cellManager.createSelectCell(queryId, selectFields.join('\n'), name);
         }
         this.cellManager.makeSelect(tableId, queryId);
 
         return queryId;
+    }
+
+    private processJoinRelation(joinSources: FlatJoinSources, joinId: string, mainQueryId: string): string {
+        const relation = joinSources.relationIndex[joinId];
+        //let joinTable1Id = this.processSubquery(this.queries[relation.source.from], relation.source.from, relation.source.fromAs);
+        let joinTable1Id = `${mainQueryId}-${joinId}`;
+        for (const relationJoinId of relation.relations) {
+            const relation = joinSources.relationIndex[relationJoinId];
+            let joinTable2Id = this.processSubquery(this.queries[relation.source.from], relation.source.from, relation.source.fromAs);
+            // const relation = joinSources.relationIndex[relationJoinId];
+            // const joinTable2Id = this.processJoinRelation(joinSources, relationJoinId);
+            if (!this.cellManager.cellExists(relationJoinId)) {
+                const condition = GraphTooltipFormatter.makeHintForCondition(relation.condition);
+                this.cellManager.createJoinCell(`${mainQueryId}-${relationJoinId}`, relation.type, condition);
+            }
+            this.cellManager.makeJoin(joinTable1Id, joinTable2Id, `${mainQueryId}-${relationJoinId}`);
+            //joinTable1Id = relationJoinId;
+            joinTable1Id = this.processJoinRelation(joinSources, relationJoinId, mainQueryId);
+        }
+        return joinTable1Id;
     }
 
     /**
@@ -118,16 +140,45 @@ export class VisualizerQueryManager {
         let joinTable1Id = joinSources.root.source.from;
         joinTable1Id = this.processSubquery(this.queries[joinTable1Id], joinTable1Id, joinSources.root.source.fromAs);
         for (const joinId of joinSources.root.relations) {
+            // rd
+            // const joinTable2Id = this.processJoinRelation(joinSources, joinId);
             const relation = joinSources.relationIndex[joinId];
             let joinTable2Id = this.processSubquery(this.queries[relation.source.from], relation.source.from, relation.source.fromAs);
+
+            // for (const relationJoinId of relation.relations) {
+            //     const relation = joinSources.relationIndex[relationJoinId];
+            //     let joinTable3Id = this.processSubquery(this.queries[relation.source.from], relation.source.from, relation.source.fromAs);
+            //     if (!this.cellManager.cellExists(relationJoinId)) {
+            //         const condition = GraphTooltipFormatter.makeHintForCondition(relation.condition);
+            //         this.cellManager.createJoinCell(relationJoinId, relation.type, condition);
+            //     }
+            //     this.cellManager.makeJoin(joinTable2Id, joinTable3Id, relationJoinId);
+            //     joinTable2Id = relationJoinId;
+            // }
+
             if (!this.cellManager.cellExists(joinId)) {
-                this.cellManager.createJoinCell(joinId, relation.type, relation.condition);
+                const condition = GraphTooltipFormatter.makeHintForCondition(relation.condition);
+                this.cellManager.createJoinCell(`${queryId}-${joinId}`, relation.type, condition);
             }
-            this.cellManager.makeJoin(joinTable1Id, joinTable2Id, joinId);
-            joinTable1Id = joinId;
+            //this.cellManager.makeJoin(joinTable1Id, joinTable2Id, joinId);
+            this.cellManager.makeJoin(joinTable1Id, joinTable2Id, `${queryId}-${joinId}`);
+            joinTable1Id = this.processJoinRelation(joinSources, joinId, queryId);
+            // joinTable1Id = joinId;
         }
 
-        let lastTableId = query.joinSources.root.relations.slice(-1)[0];
+        //let lastTableId = query.joinSources.root.relations.slice(-1)[0];
+        let lastTableId = joinTable1Id;
+
+        if (query.groupBy !== undefined) {
+            const groupById = queryId + '-g';
+            const groupFields: string[] = [];
+            for (const groupNumber of query.groupBy) {
+                groupFields.push(GraphTooltipFormatter.makeHintForField(query.select[groupNumber]));
+            }
+            this.cellManager.createGroupByCell(groupById, groupFields.join('\n'));
+            this.cellManager.makeGroupBy(joinTable1Id, groupById);
+            lastTableId = groupById;
+        }
 
         if (query.where !== undefined) {
             const whereId = queryId + '-w';
@@ -135,26 +186,15 @@ export class VisualizerQueryManager {
             for (const whereField of query.where) {
                 whereFields.push(whereField.expression);
             }
-            this.cellManager.createWhereCell(whereId, whereFields.join('\n'));
+            this.cellManager.createWhereCell(whereId, whereFields.join(LineConditionOperators.AND + '\n'));
             this.cellManager.makeWhere(lastTableId, whereId);
             lastTableId = whereId;
-        }
-
-        if (query.groupBy !== undefined) {
-            const groupById = queryId + '-g';
-            const groupFields: string[] = [];
-            for (const groupNumber of query.groupBy) {
-                groupFields.push(this.makeHintForField(query.select[groupNumber]));
-            }
-            this.cellManager.createGroupByCell(groupById, groupFields.join('\n'));
-            this.cellManager.makeGroupBy(lastTableId, groupById);
-            lastTableId = groupById;
         }
 
         if (!this.cellManager.cellExists(queryId)) {
             const selectFields = [];
             for (const selectField of query.select) {
-                selectFields.push(this.makeHintForField(selectField));
+                selectFields.push(GraphTooltipFormatter.makeHintForField(selectField));
             }
             this.cellManager.createSelectCell(queryId, selectFields.join('\n'), name);
         }
@@ -194,7 +234,7 @@ export class VisualizerQueryManager {
                         correspondingFields.push('null');
                     }
                 }
-                selectFields.push(this.makeHintForExpression(correspondingFields.join(' | '), query.select[i].type));
+                selectFields.push(GraphTooltipFormatter.makeHintForExpression(correspondingFields.join(' | '), query.select[i].type));
                 
             }
             this.cellManager.createSelectCell(queryId, selectFields.join('\n'), name);
@@ -216,7 +256,7 @@ export class VisualizerQueryManager {
             case DSQueryType.system:
                 return this.processSystemTable(subqueryId, name);
             case DSQueryType.constant:
-                return this.processConstantQuery(subquery, subqueryId);
+                return this.processConstantQuery(subquery, subqueryId, name);
             case DSQueryType.select:
                 return this.processSelectQuery(subquery, subqueryId, name);
             case DSQueryType.join:
@@ -237,34 +277,6 @@ export class VisualizerQueryManager {
             this.cellManager.createSystemCell(tableId, tableName);
         }
         return tableId;
-    }
-
-    /**
-     * Создаёт текст подсказки по полю.
-     * @param field поле
-     * @returns текст подсказки
-     */
-    private makeHintForField(field: DSQueryField): string {
-        let expression = field.expression;
-        for (const func in AggregateFunctions) {
-            const regexp = new RegExp(`${func}`, 'g');
-            expression = expression.replace(regexp, `<font color="orangered">${func}</font>`);
-        }
-        return field.type !== undefined ? `${expression}: <font color="green">${field.type}</font>` : expression;
-    }
-
-    /**
-     * Создаёт текст подсказки по выражению.
-     * @param expression выражение
-     * @param type тип выражения (при наличии, иначе `undefined`)
-     * @returns текст подсказки
-     */
-    private makeHintForExpression(expression: string, type: Type | undefined = undefined) {
-        for (const func in AggregateFunctions) {
-            const regexp = new RegExp(`${func}`, 'g');
-            expression = expression.replace(regexp, `<font color="orangered">${func}</font>`);
-        }
-        return type !== undefined ? `${expression}: <font color="green">${type}</font>` : expression;
     }
 
     /**

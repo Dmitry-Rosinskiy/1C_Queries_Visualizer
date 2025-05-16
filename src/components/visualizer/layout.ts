@@ -25,7 +25,7 @@ export class VisualizerLayout {
     /**
      * Размещает (упорядочивает) элементы графа.
      */
-    layoutGraph = (): void => {
+    layoutGraph(): void {
         this.graph.getDataModel().beginUpdate();
 
         this.graph.setCellsMovable(true);

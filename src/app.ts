@@ -4,7 +4,7 @@ import { FlatDSQueryContainer } from './types/FlatDSQuery';
 
 /** Приложение визуализатора */
 export class AppModelVisualizer {
-    schemeGraph: VisualizerGraph | undefined;
+    private schemeGraph: VisualizerGraph | undefined;
 
     /**
      * Конструктор приложения визуализатора.

@@ -56,7 +56,7 @@ export const FlatUnion: FlatDSQueryContainer = {
       type: DSQueryType.system,
       from: "Документ.РасходТовара",
     },
-    a43c1eb1276d483fac139b6de8644fc8: {
+    "a43c1eb1276d483fac139b6de8644fc8": {
       type: DSQueryType.system,
       from: "Документ.ПриходТовара",
     },

@@ -24,8 +24,11 @@ body {
 .query-button-unselected {
     margin: 5px;
     background-color: lightblue;
+    border-radius: 3px;
 }
 
 .query-button-selected {
+    margin: 5px;
     background-color: greenyellow;
+    border-radius: 3px;
 }

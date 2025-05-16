@@ -10,20 +10,7 @@ export class GraphTooltipFormatter {
      * @returns текст подсказки
      */
     static makeHintForField(field: DSQueryField): string {
-        //let expression = field.expression;
         return this.makeHintForExpression(field.expression, field.type);
-        // Object.entries(AggregateFunctions).forEach(entries => {
-        //     for (const func of entries) {
-        //         console.info(func);
-        //         const regexp = new RegExp(`${func}`, 'g');
-        //         expression = expression.replace(regexp, `<font color="orangered">${func}</font>`);
-        //     }
-        // });
-        // for (const func in AggregateFunctions) {
-        //     const regexp = new RegExp(`${func}`, 'g');
-        //     expression = expression.replace(regexp, `<font color="orangered">${func}</font>`);
-        // }
-        // return field.type !== undefined ? `${expression}: <font color="green">${field.type}</font>` : expression;
     }
 
     /**
@@ -39,10 +26,6 @@ export class GraphTooltipFormatter {
                 expression = expression.replace(regexp, `<font color="orangered">${func}</font>(`);
             }
         });
-        // for (const func in AggregateFunctions) {
-        //     const regexp = new RegExp(`${func}`, 'g');
-        //     expression = expression.replace(regexp, `<font color="orangered">${func}</font>`);
-        // }
         return type !== undefined ? `${expression}: <font color="green">${type}</font>` : expression;
     }
 

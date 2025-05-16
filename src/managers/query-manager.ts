@@ -108,26 +108,6 @@ export class VisualizerQueryManager {
         return queryId;
     }
 
-    private processJoinRelation(joinSources: FlatJoinSources, joinId: string, mainQueryId: string): string {
-        const relation = joinSources.relationIndex[joinId];
-        //let joinTable1Id = this.processSubquery(this.queries[relation.source.from], relation.source.from, relation.source.fromAs);
-        let joinTable1Id = `${mainQueryId}-${joinId}`;
-        for (const relationJoinId of relation.relations) {
-            const relation = joinSources.relationIndex[relationJoinId];
-            let joinTable2Id = this.processSubquery(this.queries[relation.source.from], relation.source.from, relation.source.fromAs);
-            // const relation = joinSources.relationIndex[relationJoinId];
-            // const joinTable2Id = this.processJoinRelation(joinSources, relationJoinId);
-            if (!this.cellManager.cellExists(relationJoinId)) {
-                const condition = GraphTooltipFormatter.makeHintForCondition(relation.condition);
-                this.cellManager.createJoinCell(`${mainQueryId}-${relationJoinId}`, relation.type, condition);
-            }
-            this.cellManager.makeJoin(joinTable1Id, joinTable2Id, `${mainQueryId}-${relationJoinId}`);
-            //joinTable1Id = relationJoinId;
-            joinTable1Id = this.processJoinRelation(joinSources, relationJoinId, mainQueryId);
-        }
-        return joinTable1Id;
-    }
-
     /**
      * Обработка запроса "соединение".
      * @param query запрос
@@ -140,33 +120,17 @@ export class VisualizerQueryManager {
         let joinTable1Id = joinSources.root.source.from;
         joinTable1Id = this.processSubquery(this.queries[joinTable1Id], joinTable1Id, joinSources.root.source.fromAs);
         for (const joinId of joinSources.root.relations) {
-            // rd
-            // const joinTable2Id = this.processJoinRelation(joinSources, joinId);
             const relation = joinSources.relationIndex[joinId];
             let joinTable2Id = this.processSubquery(this.queries[relation.source.from], relation.source.from, relation.source.fromAs);
-
-            // for (const relationJoinId of relation.relations) {
-            //     const relation = joinSources.relationIndex[relationJoinId];
-            //     let joinTable3Id = this.processSubquery(this.queries[relation.source.from], relation.source.from, relation.source.fromAs);
-            //     if (!this.cellManager.cellExists(relationJoinId)) {
-            //         const condition = GraphTooltipFormatter.makeHintForCondition(relation.condition);
-            //         this.cellManager.createJoinCell(relationJoinId, relation.type, condition);
-            //     }
-            //     this.cellManager.makeJoin(joinTable2Id, joinTable3Id, relationJoinId);
-            //     joinTable2Id = relationJoinId;
-            // }
 
             if (!this.cellManager.cellExists(joinId)) {
                 const condition = GraphTooltipFormatter.makeHintForCondition(relation.condition);
                 this.cellManager.createJoinCell(`${queryId}-${joinId}`, relation.type, condition);
             }
-            //this.cellManager.makeJoin(joinTable1Id, joinTable2Id, joinId);
             this.cellManager.makeJoin(joinTable1Id, joinTable2Id, `${queryId}-${joinId}`);
             joinTable1Id = this.processJoinRelation(joinSources, joinId, queryId);
-            // joinTable1Id = joinId;
         }
 
-        //let lastTableId = query.joinSources.root.relations.slice(-1)[0];
         let lastTableId = joinTable1Id;
 
         if (query.groupBy !== undefined) {
@@ -309,5 +273,28 @@ export class VisualizerQueryManager {
                 }
             }
         }
+    }
+
+    /**
+     * Обработка отношения соединения.
+     * @param joinSources источники соединений
+     * @param joinId идентификатор соединения (в индексе отношений соединений)
+     * @param mainQueryId идентфикатор главного запроса-соединения
+     * @returns идентификатор соединения
+     */
+    private processJoinRelation(joinSources: FlatJoinSources, joinId: string, mainQueryId: string): string {
+        const relation = joinSources.relationIndex[joinId];
+        let joinTable1Id = `${mainQueryId}-${joinId}`;
+        for (const relationJoinId of relation.relations) {
+            const relation = joinSources.relationIndex[relationJoinId];
+            let joinTable2Id = this.processSubquery(this.queries[relation.source.from], relation.source.from, relation.source.fromAs);
+            if (!this.cellManager.cellExists(relationJoinId)) {
+                const condition = GraphTooltipFormatter.makeHintForCondition(relation.condition);
+                this.cellManager.createJoinCell(`${mainQueryId}-${relationJoinId}`, relation.type, condition);
+            }
+            this.cellManager.makeJoin(joinTable1Id, joinTable2Id, `${mainQueryId}-${relationJoinId}`);
+            joinTable1Id = this.processJoinRelation(joinSources, relationJoinId, mainQueryId);
+        }
+        return joinTable1Id;
     }
 }

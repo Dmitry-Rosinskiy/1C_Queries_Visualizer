@@ -8,20 +8,13 @@
     <link rel="icon" type="image/x-icon" href="images/ans_svg.svg">
     <script type="module" src="./app.js"></script>
     <script type="module" src="./models.js"></script>
-    <!-- <script src="./app.js" defer></script>
-    <script type="module" src="./models.js" defer></script> -->
     <script type="module">
         import AppModelVisualizer from './app.js';
         import { FlatConstant, FlatSelect, FlatJoin, FlatUnion, Query1, showQueriesPanel } from './models.js';
         window.addEventListener('load', () => {
-        //     appModelVisualizer("graph-container", query, (tableId) => {
-        //     alert("Окно редактирования " + tableId);
-        //     return query;
-        // });
-            //console.log(AppModelVisualizer);
             const app = new AppModelVisualizer("graph-container", (tableId) => {
                 alert("Окно редактирования " + tableId);
-                //return query;
+                // Чтобы схема обновилась после редактирования, необходимо вернуть новую модель запроса
                 return undefined;
         });
         showQueriesPanel(app);

@@ -452,6 +452,553 @@ const Query2 = {
   }
 }
 
+const Query3 = {
+    "id": "94de40279f7244b99e2b53e32c75a81e",
+    "loading": false,
+    "dataVersion": "f2ec27c8e49e440fb5a653c4652b17f7",
+    "baseDataVersion": "6222537dced1411ea2cc10158b003779",
+    "domainType": "query",
+    "owner": "6b4f0f40-c74c-4e0d-91bd-6dd7adf33603",
+    "ownerName": "Администратор1",
+    "updated": "2025-05-12T13:32:57.504Z",
+    "currentUndoIndex": 0,
+    "undoes": [],
+    "name": "Новый источник данных 16:22:50 · 12.05.2025",
+    "rootId": "54a5669031bf47c19c1c9b22476c3eb1",
+    "queries": {
+        "54a5669031bf47c19c1c9b22476c3eb1": {
+            "type": "join",
+            "select": [
+                {
+                    "role": "dimension",
+                    "expression": "ТоварыНаСкладах.SUM",
+                    "name": "Активность",
+                    "synonym": "Активность",
+                    "sort": "none"
+                },
+                {
+                    "role": "dimension",
+                    "expression": "ТоварыНаСкладах.ВидДвижения",
+                    "name": "ВидДвижения",
+                    "synonym": "Вид движения",
+                    "sort": "none"
+                },
+                {
+                    "role": "dimension",
+                    "expression": "ТоварыНаСкладах.Номенклатура",
+                    "name": "Номенклатура",
+                    "synonym": "Номенклатура",
+                    "sort": "none"
+                }
+            ],
+            "joinSources": {
+                "root": {
+                    "source": {
+                        "fromAs": "ТоварыНаСкладахОстаткиИОбороты",
+                        "from": "5221a70cd1044dddbfcd042f56d3a3dc"
+                    },
+                    "relations": [
+                        "d19ed96b6e74411492e3620d572d40b9"
+                    ]
+                },
+                "relationIndex": {
+                    "d19ed96b6e74411492e3620d572d40b9": {
+                        "condition": "ТоварыНаСкладахОстаткиИОбороты.Период = ТоварыНаСкладах.Период И ТоварыНаСкладахОстаткиИОбороты.Номенклатура = ТоварыНаСкладах.Номенклатура И ТоварыНаСкладахОстаткиИОбороты.Склад = ТоварыНаСкладах.Склад",
+                        "type": "left",
+                        "source": {
+                            "fromAs": "ТоварыНаСкладах",
+                            "from": "acbfa759c48b4f67bce44944ec8f1e84"
+                        },
+                        "relations": []
+                    }
+                }
+            }
+        },
+        "5221a70cd1044dddbfcd042f56d3a3dc": {
+            "type": "system",
+            "from": "РегистрНакопления.ТоварыНаСкладах|remains"
+        },
+        "acbfa759c48b4f67bce44944ec8f1e84": {
+            "type": "system",
+            "from": "РегистрНакопления.ТоварыНаСкладах"
+        }
+    },
+    "tempTableList": []
+}
+
+const Query4 = {
+    "id": "ab6ace1218d04c69af0e5c6019422576",
+    "loading": false,
+    "dataVersion": "4e86146a12a943bd95f8551321ffa23e",
+    "baseDataVersion": "08501fc2801c4e9688e62f081fbb4209",
+    "domainType": "query",
+    "owner": "6b4f0f40-c74c-4e0d-91bd-6dd7adf33603",
+    "ownerName": "Администратор1",
+    "updated": "2025-05-13T22:46:00.964Z",
+    "currentUndoIndex": 0,
+    "undoes": [],
+    "name": "Новый источник данных 03:24:09 · 14.05.2025",
+    "rootId": "5e4eec017fae4ace8ddec805e7da9520",
+    "queries": {
+        "5e4eec017fae4ace8ddec805e7da9520": {
+            "type": "join",
+            "select": [],
+            "joinSources": {
+                "root": {
+                    "source": {
+                        "fromAs": "ЗаказКлиента",
+                        "from": "28e01c95888c425abb420540ac6949e5"
+                    },
+                    "relations": [
+                        "58140cf4838344dbb780216e54952045",
+                        "607d7ad38d564462af1d90e7ad566806"
+                    ]
+                },
+                "relationIndex": {
+                    "58140cf4838344dbb780216e54952045": {
+                        "condition": "ЗаказКлиента.Контрагент = РеализацияТоваровУслуг.Контрагент",
+                        "type": "left",
+                        "source": {
+                            "fromAs": "РеализацияТоваровУслуг",
+                            "from": "1f93b763232447df8ad999986213c60a"
+                        },
+                        "relations": []
+                    },
+                    "607d7ad38d564462af1d90e7ad566806": {
+                        "condition": "ЗаказКлиента.Дата = ВозвратТоваровОтКлиента.Дата",
+                        "type": "left",
+                        "source": {
+                            "fromAs": "ВозвратТоваровОтКлиента",
+                            "from": "08b26967ec42431ca797d2b68e884a89"
+                        },
+                        "relations": []
+                    }
+                }
+            }
+        },
+        "28e01c95888c425abb420540ac6949e5": {
+            "type": "system",
+            "from": "Документ.ЗаказКлиента"
+        },
+        "1f93b763232447df8ad999986213c60a": {
+            "type": "system",
+            "from": "Документ.РеализацияТоваровУслуг"
+        },
+        "08b26967ec42431ca797d2b68e884a89": {
+            "type": "system",
+            "from": "Документ.ВозвратТоваровОтКлиента"
+        }
+    },
+    "tempTableList": []
+}
+
+const Query5 = {
+    "id": "ab6ace1218d04c69af0e5c6019422576",
+    "loading": false,
+    "dataVersion": "f270b152016f4212a39b6fdfd3c8ff9a",
+    "baseDataVersion": "4e86146a12a943bd95f8551321ffa23e",
+    "domainType": "query",
+    "owner": "6b4f0f40-c74c-4e0d-91bd-6dd7adf33603",
+    "ownerName": "Администратор1",
+    "updated": "2025-05-13T22:55:27.283Z",
+    "currentUndoIndex": 0,
+    "undoes": [],
+    "name": "Новый источник данных 03:24:09 · 14.05.2025",
+    "rootId": "5e4eec017fae4ace8ddec805e7da9520",
+    "queries": {
+        "5e4eec017fae4ace8ddec805e7da9520": {
+            "type": "join",
+            "select": [],
+            "joinSources": {
+                "root": {
+                    "source": {
+                        "fromAs": "ЗаказКлиента",
+                        "from": "28e01c95888c425abb420540ac6949e5"
+                    },
+                    "relations": [
+                        "58140cf4838344dbb780216e54952045",
+                        "607d7ad38d564462af1d90e7ad566806"
+                    ]
+                },
+                "relationIndex": {
+                    "58140cf4838344dbb780216e54952045": {
+                        "condition": "ЗаказКлиента.Контрагент = РеализацияТоваровУслуг.Контрагент",
+                        "type": "left",
+                        "source": {
+                            "fromAs": "РеализацияТоваровУслуг",
+                            "from": "1f93b763232447df8ad999986213c60a"
+                        },
+                        "relations": [
+                            "2281592b66ee432aa83090ba3bef6302"
+                        ]
+                    },
+                    "607d7ad38d564462af1d90e7ad566806": {
+                        "condition": "ЗаказКлиента.Дата = ВозвратТоваровОтКлиента.Дата",
+                        "type": "left",
+                        "source": {
+                            "fromAs": "ВозвратТоваровОтКлиента",
+                            "from": "08b26967ec42431ca797d2b68e884a89"
+                        },
+                        "relations": []
+                    },
+                    "2281592b66ee432aa83090ba3bef6302": {
+                        "type": "left",
+                        "condition": "РеализацияТоваровУслуг.Дата = КорректировкаРеализации.Дата",
+                        "source": {
+                            "from": "4e033db1a45a435685967e6eda8f806d",
+                            "fromAs": "КорректировкаРеализации"
+                        },
+                        "relations": []
+                    }
+                }
+            }
+        },
+        "28e01c95888c425abb420540ac6949e5": {
+            "type": "system",
+            "from": "Документ.ЗаказКлиента"
+        },
+        "1f93b763232447df8ad999986213c60a": {
+            "type": "system",
+            "from": "Документ.РеализацияТоваровУслуг"
+        },
+        "08b26967ec42431ca797d2b68e884a89": {
+            "type": "system",
+            "from": "Документ.ВозвратТоваровОтКлиента"
+        },
+        "4e033db1a45a435685967e6eda8f806d": {
+            "type": "system",
+            "from": "Документ.КорректировкаРеализации"
+        }
+    },
+    "tempTableList": []
+}
+
+const LongQuery = {
+    "id": "40e932d0879643518867078074cc7377",
+    "loading": false,
+    "dataVersion": "bca49d9568c744838527194ca8a91a77",
+    "baseDataVersion": "4bead0de40bb409f8866225352fb0323",
+    "domainType": "query",
+    "owner": "6b4f0f40-c74c-4e0d-91bd-6dd7adf33603",
+    "ownerName": "Администратор1",
+    "updated": "2025-04-27T16:19:16.359Z",
+    "currentUndoIndex": 0,
+    "undoes": [],
+    "name": "Новый источник данных 14:37:24 · 28.05.2024",
+    "rootId": "d80c53e3732749cc81c1962872d998c2",
+    "queries": {
+        "d80c53e3732749cc81c1962872d998c2": {
+            "type": "join",
+            "select": [
+                {
+                    "role": "dimension",
+                    "expression": "ЗаказКлиента1.КлючСвязи",
+                    "name": "КлючСвязи",
+                    "synonym": "Ключ связи",
+                    "sort": "none"
+                },
+                {
+                    "role": "dimension",
+                    "expression": "ЗаказКлиента1.НомерСтроки",
+                    "name": "НомерСтроки",
+                    "synonym": "Номер строки",
+                    "sort": "none"
+                },
+                {
+                    "role": "dimension",
+                    "expression": "Номенклатура.ВесИспользовать",
+                    "name": "Вес",
+                    "synonym": "Вес",
+                    "sort": "none"
+                },
+                {
+                    "role": "dimension",
+                    "expression": "Номенклатура.ПометкаУдаления",
+                    "name": "ПометкаУдаления",
+                    "synonym": "Пометка удаления",
+                    "sort": "none"
+                }
+            ],
+            "joinSources": {
+                "root": {
+                    "source": {
+                        "fromAs": "ТоварыНаСкладах1",
+                        "from": "df7000f2989b4b73abeb60ef3b5b8f4d"
+                    },
+                    "relations": [
+                        "1dbd8226eb2b43fda8c256445785caf3",
+                        "0dbe78db999e4c78bd5a8037b61588b3",
+                        "c11692bfd37443328773e1f0b2b1e51e"
+                    ]
+                },
+                "relationIndex": {
+                    "1dbd8226eb2b43fda8c256445785caf3": {
+                        "condition": "Условие4",
+                        "type": "right",
+                        "source": {
+                            "fromAs": "ЗаказКлиента1",
+                            "from": "2e6e646c7ede4eddaeca639c1a9efc22"
+                        },
+                        "relations": []
+                    },
+                    "0dbe78db999e4c78bd5a8037b61588b3": {
+                        "condition": "Условие1\n",
+                        "type": "left",
+                        "source": {
+                            "fromAs": "Партнеры",
+                            "from": "730c695c44e04623b79637281f63d6a1"
+                        },
+                        "relations": []
+                    },
+                    "c11692bfd37443328773e1f0b2b1e51e": {
+                        "condition": "Условие2\n",
+                        "type": "inner",
+                        "source": {
+                            "fromAs": "Номенклатура",
+                            "from": "a15e08700cb641c09129af1e39eb7cc8"
+                        },
+                        "relations": []
+                    }
+                }
+            },
+            "groupBy": [
+                0,
+                1,
+                2,
+                3
+            ],
+            "where": [
+                {
+                    "id": "78c934aceec84deea10a62b869bf9ae5",
+                    "expression": "ЗаказКлиента1.Сумма = 500"
+                }
+            ]
+        },
+        "df7000f2989b4b73abeb60ef3b5b8f4d": {
+            "type": "union",
+            "select": [
+                {
+                    "name": "Активность",
+                    "role": "dimension",
+                    "sort": "none",
+                    "synonym": "Активность",
+                    "expressionUnion": [
+                        "Активность",
+                        "Активность",
+                        null
+                    ]
+                }
+            ],
+            "unions": [
+                {
+                    "fromAs": "ТоварыНаСкладах2",
+                    "from": "348f8849818644d19231acc1dce41f90"
+                },
+                {
+                    "fromAs": "ЗаказыКлиентов",
+                    "from": "7ffa9af618b74474b8954edce15d386e"
+                },
+                {
+                    "from": "ca7a581f8a5149caa79a58d0d5fabc6c",
+                    "fromAs": "ПрогрессОбновления"
+                }
+            ],
+            "withDuplicates": true
+        },
+        "348f8849818644d19231acc1dce41f90": {
+            "type": "join",
+            "select": [
+                {
+                    "role": "dimension",
+                    "expression": "ТоварыНаСкладах.Активность",
+                    "name": "Активность",
+                    "synonym": "Активность",
+                    "sort": "none"
+                },
+                {
+                    "role": "dimension",
+                    "expression": "РеализацияТоваровУслуг.Менеджер",
+                    "name": "Менеджер",
+                    "synonym": "Менеджер",
+                    "sort": "none"
+                }
+            ],
+            "joinSources": {
+                "root": {
+                    "source": {
+                        "from": "c95c9cfa0dd4454081ae0cc5ca6edfb3",
+                        "fromAs": "ТоварыНаСкладах"
+                    },
+                    "relations": [
+                        "ab700feb180f4a4a966d030a5f12861c"
+                    ]
+                },
+                "relationIndex": {
+                    "ab700feb180f4a4a966d030a5f12861c": {
+                        "source": {
+                            "from": "66f0cd7bffc14a56ab65d4c0ae174320",
+                            "fromAs": "РеализацияТоваровУслуг"
+                        },
+                        "condition": "Условие1\n",
+                        "type": "left",
+                        "relations": []
+                    }
+                }
+            },
+            "groupBy": [
+                0,
+                1
+            ]
+        },
+        "c95c9cfa0dd4454081ae0cc5ca6edfb3": {
+            "type": "system",
+            "from": "РегистрНакопления.ТоварыНаСкладах"
+        },
+        "7ffa9af618b74474b8954edce15d386e": {
+            "type": "system",
+            "from": "РегистрНакопления.ЗаказыКлиентов"
+        },
+        "da9ed8057c114a40a01e2376375514dd": {
+            "type": "system",
+            "from": "Документ.ЗаказКлиента"
+        },
+        "730c695c44e04623b79637281f63d6a1": {
+            "type": "system",
+            "from": "Справочник.Партнеры"
+        },
+        "a15e08700cb641c09129af1e39eb7cc8": {
+            "type": "system",
+            "from": "Справочник.Номенклатура"
+        },
+        "66f0cd7bffc14a56ab65d4c0ae174320": {
+            "type": "system",
+            "from": "Документ.РеализацияТоваровУслуг"
+        },
+        "2e6e646c7ede4eddaeca639c1a9efc22": {
+            "type": "join",
+            "select": [
+                {
+                    "role": "dimension",
+                    "expression": "ЗаказКлиентаСкидкиНаценки.НомерСтроки",
+                    "name": "НомерСтроки",
+                    "synonym": "Номер строки",
+                    "sort": "none"
+                },
+                {
+                    "role": "dimension",
+                    "expression": "ЗаказКлиентаСкидкиНаценки.СкидкаНаценка",
+                    "name": "СкидкаНаценка",
+                    "synonym": "Скидка наценка",
+                    "sort": "none"
+                },
+                {
+                    "role": "dimension",
+                    "expression": "ЗаказКлиентаСкидкиНаценки.КлючСвязи",
+                    "name": "КлючСвязи",
+                    "synonym": "Ключ связи",
+                    "sort": "none"
+                },
+                {
+                    "role": "dimension",
+                    "expression": "ЗаказКлиентаСкидкиНаценки.Сумма",
+                    "name": "Сумма",
+                    "synonym": "Сумма",
+                    "sort": "none"
+                }
+            ],
+            "joinSources": {
+                "root": {
+                    "source": {
+                        "from": "f3be90d9b8314c3e8b8efe4a5d4e784a",
+                        "fromAs": "ЗаказКлиента2"
+                    },
+                    "relations": [
+                        "8305f1f0424f471ea721c55aa08011c9"
+                    ]
+                },
+                "relationIndex": {
+                    "8305f1f0424f471ea721c55aa08011c9": {
+                        "source": {
+                            "from": "fa17946c725140ccb841fe27f1949ca5",
+                            "fromAs": "ЗаказКлиентаСкидкиНаценки"
+                        },
+                        "condition": "Условие5\n",
+                        "type": "full",
+                        "relations": []
+                    }
+                }
+            },
+            "groupBy": [
+                0,
+                1,
+                2,
+                3
+            ]
+        },
+        "fa17946c725140ccb841fe27f1949ca5": {
+            "type": "system",
+            "from": "Документ.ЗаказКлиента.СкидкиНаценки"
+        },
+        "ca7a581f8a5149caa79a58d0d5fabc6c": {
+            "type": "system",
+            "from": "РегистрСведений.ПрогрессОбновления"
+        },
+        "f3be90d9b8314c3e8b8efe4a5d4e784a": {
+            "type": "join",
+            "select": [
+                {
+                    "role": "dimension",
+                    "expression": "ГруппыВнешнихПользователей.Родитель",
+                    "name": "ВходитВГруппу",
+                    "synonym": "Входит в группу",
+                    "sort": "none"
+                },
+                {
+                    "role": "dimension",
+                    "expression": "ЗаказКлиента.guid",
+                    "name": "УникальныйИдентификатор",
+                    "synonym": "Уникальный идентификатор",
+                    "sort": "none"
+                },
+                {
+                    "role": "dimension",
+                    "expression": "ЗаказКлиента.Дата = СЕЙЧАС()",
+                    "name": "Поле",
+                    "synonym": "Поле",
+                    "sort": "none"
+                }
+            ],
+            "joinSources": {
+                "root": {
+                    "source": {
+                        "from": "da9ed8057c114a40a01e2376375514dd",
+                        "fromAs": "ЗаказКлиента"
+                    },
+                    "relations": [
+                        "1400724e68df48528bce0b44121fe6b4"
+                    ]
+                },
+                "relationIndex": {
+                    "1400724e68df48528bce0b44121fe6b4": {
+                        "source": {
+                            "from": "3f18bb6c5e3d487a9b8f80afac4ffefb",
+                            "fromAs": "ГруппыВнешнихПользователей"
+                        },
+                        "condition": "Условие3\n",
+                        "type": "left",
+                        "relations": []
+                    }
+                }
+            }
+        },
+        "3f18bb6c5e3d487a9b8f80afac4ffefb": {
+            "type": "system",
+            "from": "Справочник.ГруппыВнешнихПользователей"
+        }
+    },
+    "tempTableList": []
+} 
+
 /**
  * Показывает панель с запросами.
  * @param {AppModelVisualizer} visualizer приложение визуализатора
@@ -468,6 +1015,10 @@ export const showQueriesPanel = (visualizer) => {
     queries.push(makeQuery("union", FlatUnion));
     queries.push(makeQuery("query1", Query1));
     queries.push(makeQuery("query2", Query2));
+    queries.push(makeQuery("query3", Query3));
+    queries.push(makeQuery("query4", Query4));
+    queries.push(makeQuery("query5", Query5));
+    queries.push(makeQuery("long query", LongQuery));
     makeQuerySelectElement(queriesSelectElem, queries, visualizer);
 }
 
